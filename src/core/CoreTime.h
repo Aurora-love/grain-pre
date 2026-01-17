@@ -18,6 +18,17 @@ private:
     static float s_TimeScale;
     static std::chrono::steady_clock::time_point s_StartTime;
     static std::chrono::steady_clock::time_point s_LastFrameTime;
-    static bool s_Initialized;
+};
+
+struct Timestep
+{
+Timestep(float time = 0.0f) : m_Time(time){}
+//static_cast<float>
+explicit operator float() const { return m_Time; }
+float GetSeconds() const { return m_Time; }
+float GetMilliseconds() const { return m_Time * 1000.0f; }
+
+private:
+    float m_Time;
 };
 }
