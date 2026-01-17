@@ -1,0 +1,22 @@
+# 自动检测文本文件并在 Windows 工作区使用 CRLF
+* text=auto eol=crlf
+
+# 对于脚本/CI 文件，保留 LF，避免在 Unix 环境中问题
+*.sh text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# 二进制文件
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
+*.gz binary
+*.exe binary
+*.dll binary
+*.lib binary
+*.a binary
+*.so binary
+*.pdf binary
