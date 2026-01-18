@@ -30,6 +30,7 @@ set(PROJECT_SOURCES
     src/core/Log.cpp
     src/core/CoreTime.cpp
     src/core/CoreMath.cpp
+    src/core/pch.cpp
 )
 
 # Create executable target
@@ -46,6 +47,12 @@ target_include_directories(${PROJECT_NAME}
 
 # Require C++20 features for the target (clear error if unsupported)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+
+# Precompiled headers (PCH)
+# - Use CMake's `target_precompile_headers` (available since CMake 3.16+)
+# - Add the `src/core` include dir so translation units can `#include "pch.h"` directly
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/core)
+target_precompile_headers(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/core/pch.h)
 
 # Find spdlog via CMake config (prefer system-installed package)
 # - `find_package(spdlog CONFIG QUIET)` looks for spdlogConfig.cmake

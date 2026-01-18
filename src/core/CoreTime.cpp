@@ -7,8 +7,7 @@ float Time::s_TimeScale = 1.0f;
 std::chrono::steady_clock::time_point Time::s_StartTime;
 std::chrono::steady_clock::time_point Time::s_LastFrameTime;
 
-void Time::Init()
-{
+void Time::Init() {
     s_StartTime = std::chrono::steady_clock::now();
     s_LastFrameTime = s_StartTime;
     s_DeltaTime = 0.0f;
@@ -16,8 +15,7 @@ void Time::Init()
     s_TimeScale = 1.0f;
 }
 
-void Time::Update()
-{
+void Time::Update() {
     auto currentTime = std::chrono::steady_clock::now();
     std::chrono::duration<float> delta = currentTime - s_LastFrameTime;
     s_DeltaTime = delta.count();

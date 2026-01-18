@@ -45,6 +45,7 @@ float Length(const Vec3& v) { return glm::length(v); }
 float Length(const Vec4& v) { return glm::length(v); }
 float LengthSquared(const Vec2& v) { return Dot(v, v); }
 float LengthSquared(const Vec3& v) { return Dot(v, v); }
+float LengthSquared(const Vec4& v) { return Dot(v, v); }
 Vec2 Reflect(const Vec2& v, const Vec2& normal) { return glm::reflect(v, normal); }
 Vec3 Reflect(const Vec3& v, const Vec3& normal) { return glm::reflect(v, normal); }
 Vec2 Refract(const Vec2& v, const Vec2& normal, float eta) { return glm::refract(v, normal, eta); }

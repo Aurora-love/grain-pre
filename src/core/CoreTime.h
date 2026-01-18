@@ -20,8 +20,7 @@ private:
     static std::chrono::steady_clock::time_point s_LastFrameTime;
 };
 
-struct Timestep
-{
+struct Timestep {
 Timestep(float time = 0.0f) : m_Time(time){}
 //static_cast<float>
 explicit operator float() const { return m_Time; }
