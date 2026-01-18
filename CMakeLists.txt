@@ -29,18 +29,19 @@ set(PROJECT_SOURCES
     src/main.cpp
     src/core/Log.cpp
     src/core/CoreTime.cpp
+    src/core/CoreMath.cpp
 )
 
 # Create executable target
 # - `add_executable(<name> <sources...>)` defines the binary target
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
-
 # Target include directories (PRIVATE applies only to this target)
 # - ${CMAKE_SOURCE_DIR} is the source root (top-level CMakeLists.txt location)
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/thirdparty/spdlog/include
+        ${CMAKE_SOURCE_DIR}/thirdparty/glm/include
 )
 
 # Require C++20 features for the target (clear error if unsupported)
@@ -65,6 +66,22 @@ endif()
 if(spdlog_FOUND)
     # Link to spdlog target if found
     target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
+endif()
+
+# Find GLM (header-only math library)
+# Prefer a system or package-provided config, otherwise fall back to bundled headers in thirdparty/glm
+find_package(glm CONFIG QUIET)
+if(glm_FOUND)
+    target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm)
+else()
+    if(EXISTS "${CMAKE_SOURCE_DIR}/thirdparty/glm/include/glm/glm.hpp")
+        add_library(glm INTERFACE)
+        target_include_directories(glm INTERFACE ${CMAKE_SOURCE_DIR}/thirdparty/glm/include)
+        target_link_libraries(${PROJECT_NAME} PRIVATE glm)
+        message(STATUS "Using bundled glm from thirdparty/glm/include")
+    else()
+        message(STATUS "glm not found; add thirdparty/glm or install glm via package manager if needed")
+    endif()
 endif()
 
 # Configure per-configuration output directories
