@@ -14,8 +14,11 @@
 template<typename T>
 constexpr auto BIT(T x) { return 1 << x; }
 
-//TODO: BIND_EVENT_FN
-//      ASSERT
+//绑定回调函数
+#define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) {\
+    return this->fn(std::forward<decltype(args)>(args)...);\
+}
+//TODO: ASSERT
 
 namespace GE {
 
