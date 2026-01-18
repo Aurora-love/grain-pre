@@ -106,7 +106,12 @@ endif()
 # Platform/compiler-specific definitions
 if(MSVC)
     # Disable MSVC secure CRT warnings (e.g. recommending fopen_s)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE 
+        _CRT_SECURE_NO_WARNINGS
+        _WIN64
+        UNICODE
+        _UNICODE
+    )
 endif()
 
 # Install rules (optional)

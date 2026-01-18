@@ -1,7 +1,7 @@
 #include "core/Log.h"
 int main(int, char**)
 {
-    Grain::Log::Init();
-    
+    GE::Log::Init();
+
     LOG_INFO("log init");
 }

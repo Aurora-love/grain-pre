@@ -1,5 +1,5 @@
 #include "CoreTime.h"
-namespace Grain {
+namespace GE {
 
 float Time::s_DeltaTime = 0.0f;
 double Time::s_TotalTime = 0.0;

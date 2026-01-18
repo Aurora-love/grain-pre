@@ -5,7 +5,7 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 #pragma warning(pop)
-namespace Grain {
+namespace GE {
 
 class Log{
 public:
@@ -17,8 +17,8 @@ private:
 
 }
 
-#define LOG_TRACE(...)      ::Grain::Log::GetLogger()->trace(__VA_ARGS__)
-#define LOG_INFO(...)       ::Grain::Log::GetLogger()->info(__VA_ARGS__)
-#define LOG_WARN(...)       ::Grain::Log::GetLogger()->warn(__VA_ARGS__)
-#define LOG_ERROR(...)      ::Grain::Log::GetLogger()->error(__VA_ARGS__)
-#define LOG_CRITIVAL(...)   ::Grain::Log::GetLogger()->critical(__VA_ARGS__)
+#define LOG_TRACE(...)      ::GE::Log::GetLogger()->trace(__VA_ARGS__)
+#define LOG_INFO(...)       ::GE::Log::GetLogger()->info(__VA_ARGS__)
+#define LOG_WARN(...)       ::GE::Log::GetLogger()->warn(__VA_ARGS__)
+#define LOG_ERROR(...)      ::GE::Log::GetLogger()->error(__VA_ARGS__)
+#define LOG_CRITIVAL(...)   ::GE::Log::GetLogger()->critical(__VA_ARGS__)
