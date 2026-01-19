@@ -5,17 +5,17 @@ namespace GE {
 
 class KeyEvent : public Event {
 public:
-    inline int GetKeyCode() const { return m_KeyCode; }
+    inline uint32_t GetKeyCode() const { return m_KeyCode; }
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryKeyboard)
 protected:
-    KeyEvent(int keycode) : m_KeyCode(keycode) {}
-    int m_KeyCode;
+    KeyEvent(uint32_t keycode) : m_KeyCode(keycode) {}
+    uint32_t m_KeyCode;
 };
 /** @brief 按键按下事件 */
 class KeyPressedEvent : public KeyEvent {
 public:
-    KeyPressedEvent(int keycode, int repeatCount) : KeyEvent(keycode), m_RepeatCount(repeatCount) {}
-    inline int GetRepeatCount() const { return m_RepeatCount; }
+    KeyPressedEvent(uint32_t keycode, uint32_t repeatCount) : KeyEvent(keycode), m_RepeatCount(repeatCount) {}
+    inline uint32_t GetRepeatCount() const { return m_RepeatCount; }
     EVENT_CLASS_TYPE(KeyPressed)
 //OPTIMIZE
 	std::string ToString() const override {
@@ -30,7 +30,7 @@ private:
 class KeyReleasedEvent : public KeyEvent
 {
 public:
-	KeyReleasedEvent(int keycode) : KeyEvent(keycode) {}
+	KeyReleasedEvent(uint32_t keycode) : KeyEvent(keycode) {}
     EVENT_CLASS_TYPE(KeyReleased)
 //OPTIMIZE
     std::string ToString() const override {
@@ -43,7 +43,7 @@ public:
 class KeyTypedEvent : public KeyEvent
 {
 public:
-	KeyTypedEvent(int keycode) : KeyEvent(keycode) {}
+	KeyTypedEvent(uint32_t keycode) : KeyEvent(keycode) {}
     EVENT_CLASS_TYPE(KeyTyped)
 //OPTIMIZE
 	std::string ToString() const override {

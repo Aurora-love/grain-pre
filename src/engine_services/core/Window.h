@@ -30,6 +30,6 @@ public:
     virtual void SetVSync(bool enabled) = 0;
     virtual bool IsVSync() const = 0;
 
-    static Scope<IWindow> CreateWindow(const WindowProps& props = WindowProps());
+    static Scope<IWindow> Create(const WindowProps& props = WindowProps());
 };
 }
