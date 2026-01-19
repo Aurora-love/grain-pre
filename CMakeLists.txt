@@ -34,6 +34,8 @@ set(PROJECT_SOURCES
     src/core/CoreTime.cpp
     src/core/CoreMath.cpp
     src/core/pch.cpp
+    src/engine_services/platform/glfw/GlfwWindow.cpp
+    src/engine_services/core/Application.cpp
 )
 
 # Create executable target

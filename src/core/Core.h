@@ -16,9 +16,10 @@ constexpr auto BIT(T x) { return 1 << x; }
 
 //绑定回调函数
 #define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) {\
-    return this->fn(std::forward<decltype(args)>(args)...);\
-}
+        return this->fn(std::forward<decltype(args)>(args)...);\
+    }
 //TODO: ASSERT
+//std::bind(&fn, this, std::placeholders::_1)
 
 namespace GE {
 
