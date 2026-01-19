@@ -21,6 +21,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Export compile commands for tools like clangd / IntelliSense to consume
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Use GNU install dirs for cross-platform install locations
 include(GNUInstallDirs)
 
@@ -43,6 +46,7 @@ target_include_directories(${PROJECT_NAME}
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/thirdparty/spdlog/include
         ${CMAKE_SOURCE_DIR}/thirdparty/glm/include
+    ${CMAKE_SOURCE_DIR}/thirdparty/glfw/include
 )
 
 # Require C++20 features for the target (clear error if unsupported)
@@ -91,6 +95,34 @@ else()
     endif()
 endif()
 
+# GLFW: prefer system package, otherwise use bundled static library in thirdparty/glfw
+find_package(glfw3 CONFIG QUIET)
+if(glfw3_FOUND)
+    target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
+else()
+    if(EXISTS "${CMAKE_SOURCE_DIR}/thirdparty/glfw/include/GLFW/glfw3.h")
+        add_library(glfw3 STATIC IMPORTED)
+        set(_glfw_lib_dir ${CMAKE_SOURCE_DIR}/thirdparty/glfw/lib)
+        if(WIN32)
+            set(_glfw_lib "${_glfw_lib_dir}/glfw3.lib")
+        else()
+            set(_glfw_lib "${_glfw_lib_dir}/libglfw3.a")
+        endif()
+        set_target_properties(glfw3 PROPERTIES IMPORTED_LOCATION "${_glfw_lib}")
+        target_include_directories(glfw3 INTERFACE ${CMAKE_SOURCE_DIR}/thirdparty/glfw/include)
+        target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
+        if(WIN32)
+            target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 gdi32 user32 shell32)
+        else()
+            find_package(OpenGL REQUIRED)
+            target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL dl pthread)
+        endif()
+        message(STATUS "Using bundled GLFW from thirdparty/glfw")
+    else()
+        message(STATUS "GLFW not found; add thirdparty/glfw or install system glfw3")
+    endif()
+endif()
+
 # Configure per-configuration output directories
 # - `$<CONFIG>` expands to the configuration name in multi-config generators (e.g. Visual Studio)
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -135,6 +167,7 @@ if(MSVC)
         _WIN64
         UNICODE
         _UNICODE
+        GLM_ENABLE_EXPERIMENTAL
     )
 endif()
 

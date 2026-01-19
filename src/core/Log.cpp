@@ -3,8 +3,8 @@
 
 namespace GE {
 
-Ref<spdlog::logger> Log::s_EngineLogger = CreateRef<spdlog::logger>();
-Ref<spdlog::logger> Log::s_Logger = CreateRef<spdlog::logger>();
+Ref<spdlog::logger> Log::s_EngineLogger;
+Ref<spdlog::logger> Log::s_Logger;
 
 void Log::Init() {
     spdlog::set_pattern("%^[%T] %n: %v%$");
