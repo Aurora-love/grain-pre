@@ -1,12 +1,15 @@
 #include "GlfwWindow.h"
 #include "core/Log.h"
-#include "core/events/ApplicationEvent.h"
-#include "core/events/MouseEvent.h"
 #include "core/events/KeyEvent.h"
+#include "core/events/MouseEvent.h"
+#include "core/events/ApplicationEvent.h"
+#include "engine_services/platform/opengl/OpenGLContext.h"
 #include <GLFW/glfw3.h>
 
 namespace GE {
+
 static uint8_t s_GLFWWindowCount = 0;
+
 static void GLFWErrorCallback(int error, const char* description) {
     LOG_ERROR_ENGINE("GLFW Error ({0}): {1}", error, description);
 }
@@ -44,9 +47,10 @@ void GlfwWindow::Init(const WindowProps& props) {
         return;
     }
     ++s_GLFWWindowCount;
-    //TODO: Create graphics context
-    //m_Context = CreateScope<OpenGLContext>(m_Window);
-	
+
+    m_Context = CreateScope<OpenGLContext>(m_Window);
+	m_Context->InitContext();
+    
     glfwSetWindowUserPointer(m_Window, &m_Data);
     SetVSync(true);
 
@@ -136,7 +140,9 @@ void GlfwWindow::Shutdown() {
 
 void GlfwWindow::Update() {
     glfwPollEvents();
-    //TODO: m_Context->SwapBuffers();
+    if (m_Context) {
+        m_Context->SwapBuffers();
+    }
 }
 
 void GlfwWindow::SetVSync(bool enabled) {

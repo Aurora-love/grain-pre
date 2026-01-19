@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20.0)
 # Project declaration
 # - `project(<name> VERSION <ver> LANGUAGES <langs>)` sets project name, version and languages
 #   Declares `grain-pre` as a C++ project version 1.0.0
-project(grain-pre VERSION 1.0.0 LANGUAGES CXX)
+project(grain-pre VERSION 1.0.0 LANGUAGES CXX C)
 
 # Configurable options (use `cmake -D<NAME>=ON/OFF`)
 # - `ENABLE_WARNINGS_AS_ERRORS`: treat warnings as errors (/WX or -Werror)
@@ -34,8 +34,9 @@ set(PROJECT_SOURCES
     src/core/CoreTime.cpp
     src/core/CoreMath.cpp
     src/core/pch.cpp
-    src/engine_services/platform/glfw/GlfwWindow.cpp
     src/engine_services/core/Application.cpp
+    src/engine_services/platform/glfw/GlfwWindow.cpp
+    src/engine_services/platform/opengl/OpenGLContext.cpp
 )
 
 # Create executable target
@@ -48,7 +49,8 @@ target_include_directories(${PROJECT_NAME}
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/thirdparty/spdlog/include
         ${CMAKE_SOURCE_DIR}/thirdparty/glm/include
-    ${CMAKE_SOURCE_DIR}/thirdparty/glfw/include
+        ${CMAKE_SOURCE_DIR}/thirdparty/glfw/include
+        ${CMAKE_SOURCE_DIR}/thirdparty/glad/include
 )
 
 # Require C++20 features for the target (clear error if unsupported)
@@ -125,6 +127,18 @@ else()
     endif()
 endif()
 
+# Glad: use bundled glad (source + headers) if available
+# - Adds a static `glad` target built from thirdparty/glad/src/glad.c
+# - Links `glad` into the main executable and exposes the include dir
+if(EXISTS "${CMAKE_SOURCE_DIR}/thirdparty/glad/src/glad.c")
+    add_library(glad STATIC ${CMAKE_SOURCE_DIR}/thirdparty/glad/src/glad.c)
+    target_include_directories(glad PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/glad/include)
+    target_link_libraries(${PROJECT_NAME} PRIVATE glad)
+    message(STATUS "Using bundled glad from thirdparty/glad")
+else()
+    message(STATUS "glad not found in thirdparty/glad; ensure GL loader is available")
+endif()
+
 # Configure per-configuration output directories
 # - `$<CONFIG>` expands to the configuration name in multi-config generators (e.g. Visual Studio)
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -170,6 +184,7 @@ if(MSVC)
         UNICODE
         _UNICODE
         GLM_ENABLE_EXPERIMENTAL
+        ASSERTS_ENABLE
     )
 endif()
 

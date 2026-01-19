@@ -18,8 +18,15 @@ constexpr auto BIT(T x) { return 1 << x; }
 #define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) {\
         return this->fn(std::forward<decltype(args)>(args)...);\
     }
-//TODO: ASSERT
 //std::bind(&fn, this, std::placeholders::_1)
+//ASSERT 仅在 Debug 模式或显式开启 ASSERTS_ENABLE 时有效
+#ifdef ASSERTS_ENABLE
+	#define ASSERT(x, ...) { if(!(x)) { LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define ASSERT_ENGINE(x, ...) { if(!(x)) { LOG_ERROR_ENGINE("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#else
+	#define ASSERT(x, ...)
+	#define ASSERT_ENGINE(x, ...)
+#endif
 
 namespace GE {
 
