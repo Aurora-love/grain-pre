@@ -11,8 +11,15 @@ public:
     }
 };
 
-GE::Scope<GE::Application> GE::CreateApplication() {
-    return GE::CreateScope<Sandbox>();
+GE::Ref<GE::Application> GE::CreateApplication() {
+    static GE::Ref<GE::Application> instance = nullptr;
+    if (!instance) {
+        GE::Application::s_allowConstruction = true;
+        instance = GE::CreateRef<Sandbox>();
+        GE::Application::s_allowConstruction = false;
+        GE::Application::SetInstance(instance);
+    }
+    return instance;
 }
 
 int main(int, char**)
@@ -20,7 +27,7 @@ int main(int, char**)
     GE::Log::Init();
     LOG_INFO_ENGINE("log init");
 
-    GE::Scope<GE::Application> app = GE::CreateApplication();
-
+    GE::Ref<GE::Application> app = GE::CreateApplication();
     app->Run();
+
 }

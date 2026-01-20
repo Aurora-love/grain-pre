@@ -2,6 +2,7 @@
 #include "engine_services/core/Window.h"
 #include "core/events/ApplicationEvent.h"
 #include "core/events/Event.h"
+#include "core/Core.h"
 namespace GE {
 
 class Application {
@@ -15,18 +16,21 @@ public:
     virtual ~Application();
     void Run();
     //void Shutdown();
+    
     void OnEvent(Event& e);
-
-    inline Application& Get() { return *m_application; }
+    static void SetInstance(const Ref<Application>& instance);
+    inline static Application& Get() { return *s_instance; }
     inline IWindow& GetWindow() { return *m_Window; }
 private:
     bool OnWindowClose(WindowCloseEvent& e);
     bool OnWindowResize(WindowResizeEvent& e);
 private:
-    Scope<Application> m_application;
+    friend Ref<Application> CreateApplication();
+    static bool s_allowConstruction;
+    static Ref<Application> s_instance;
     Scope<IWindow> m_Window;
     bool m_Running = true;
 };
 
-Scope<Application> CreateApplication();
+Ref<Application> CreateApplication();
 }
