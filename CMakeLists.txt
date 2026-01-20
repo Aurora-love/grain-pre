@@ -3,7 +3,12 @@ cmake_minimum_required(VERSION 3.20.0)
 # - `project(<name> VERSION <ver> LANGUAGES <langs>)` sets project name, version and languages
 #   Declares `grain-pre` as a C++ project version 1.0.0
 project(grain-pre VERSION 1.0.0 LANGUAGES CXX C)
-
+if(MSVC)
+  # 使用动态 CRT (/MD)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL" CACHE STRING "" FORCE)
+  # 若想使用静态 CRT (/MT) 改为:
+  # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded" CACHE STRING "" FORCE)
+endif()
 # Configurable options (use `cmake -D<NAME>=ON/OFF`)
 # - `ENABLE_WARNINGS_AS_ERRORS`: treat warnings as errors (/WX or -Werror)
 # - `ENABLE_SANITIZERS`: enable ASAN/UBSAN for non-MSVC Debug builds
@@ -62,7 +67,15 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/core)
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/core/pch.h)
 
-# Find spdlog via CMake config (prefer system-installed package)
+# Find spdlog via CMake config (prefer bundled package in thirdparty when present)
+# - If a bundled spdlog CMake config exists in thirdparty, prefer that by setting spdlog_DIR
+set(_bundled_spdlog_cmake_dir ${CMAKE_SOURCE_DIR}/thirdparty/spdlog/lib/cmake/spdlog)
+if(EXISTS "${_bundled_spdlog_cmake_dir}")
+    set(spdlog_DIR "${_bundled_spdlog_cmake_dir}")
+    list(APPEND CMAKE_PREFIX_PATH "${_bundled_spdlog_cmake_dir}")
+    message(STATUS "Preferring bundled spdlog from ${_bundled_spdlog_cmake_dir}")
+endif()
+
 # - `find_package(spdlog CONFIG QUIET)` looks for spdlogConfig.cmake
 find_package(spdlog CONFIG QUIET)
 if(NOT spdlog_FOUND)
@@ -78,6 +91,7 @@ if(NOT spdlog_FOUND)
     endif()
 endif()
 
+ 
 if(spdlog_FOUND)
     # Link to spdlog target if found
     target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
@@ -137,6 +151,50 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/thirdparty/glad/src/glad.c")
     message(STATUS "Using bundled glad from thirdparty/glad")
 else()
     message(STATUS "glad not found in thirdparty/glad; ensure GL loader is available")
+endif()
+
+# ImGui (bundled)
+# - Build the docking-enabled ImGui sources and GLFW/OpenGL backends
+if(EXISTS "${CMAKE_SOURCE_DIR}/thirdparty/imgui")
+    set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/thirdparty/imgui)
+
+    set(IMGUI_SOURCES
+        ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/imgui_draw.cpp
+        ${IMGUI_DIR}/imgui_tables.cpp
+        ${IMGUI_DIR}/imgui_widgets.cpp
+        ${IMGUI_DIR}/imgui_demo.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+    )
+
+    add_library(imgui STATIC ${IMGUI_SOURCES})
+    target_include_directories(imgui PUBLIC ${IMGUI_DIR} ${IMGUI_DIR}/backends)
+    # Tell ImGui's OpenGL3 backend to use glad as the loader
+    target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD GLFW_INCLUDE_NONE)
+    target_compile_features(imgui PUBLIC cxx_std_20)
+
+    # Link against glad and (optionally) glfw; OpenGL lib on platforms as needed
+    if(TARGET glad)
+        target_link_libraries(imgui PUBLIC glad)
+    endif()
+    if(TARGET glfw3)
+        target_link_libraries(imgui PUBLIC glfw3)
+    endif()
+    if(WIN32)
+        target_link_libraries(imgui PUBLIC opengl32)
+    else()
+        find_package(OpenGL REQUIRED)
+        target_link_libraries(imgui PUBLIC OpenGL::GL)
+    endif()
+
+    # Export include dirs to consumers (transitive)
+    target_include_directories(imgui PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/imgui)
+
+    # Link ImGui into the main executable so headers are available transitively
+    target_link_libraries(${PROJECT_NAME} PRIVATE imgui)
+
+    message(STATUS "Using bundled ImGui from thirdparty/imgui")
 endif()
 
 # Configure per-configuration output directories

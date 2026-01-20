@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "core/CoreTime.h"
 #include "core/Core.h"
+#include "core/Log.h"
 #include <glad/glad.h>
 
 namespace GE {
@@ -30,9 +31,10 @@ void Application::Run() {
 }
 
 void Application::OnEvent(Event& e) {
+    LOG_INFO_ENGINE(e.ToString());
     EventDispatcher dispatcher(e);
-    	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::OnWindowResize));
+    dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+	dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::OnWindowResize));
 }
 
 bool Application::OnWindowClose(WindowCloseEvent&) {
@@ -44,6 +46,7 @@ bool Application::OnWindowResize(WindowResizeEvent& e) {
     if(e.GetWidth() == 0 || e.GetHeight() == 0) {
         return false;
     }
+    //Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
     return false;
 }
 }
