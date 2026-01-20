@@ -40,6 +40,8 @@ set(PROJECT_SOURCES
     src/core/CoreMath.cpp
     src/core/pch.cpp
     src/engine_services/core/Application.cpp
+    src/engine_services/core/Layer.cpp
+    src/engine_services/core/LayerStack.cpp
     src/engine_services/platform/glfw/GlfwWindow.cpp
     src/engine_services/platform/opengl/OpenGLContext.cpp
 )
