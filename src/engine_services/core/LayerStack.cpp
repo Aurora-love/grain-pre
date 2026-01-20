@@ -1,13 +1,15 @@
 #include "LayerStack.h"
-
+#include "core/Log.h"
 namespace GE {
 
 LayerStack::~LayerStack() {
+	LOG_INFO_ENGINE("LayerStack::~LayerStack begin (detach {} layers)", m_Layers.size());
     for(const auto& layer : m_Layers) {
         layer->OnDetach();
     }
 	m_IdToPtr.clear();
 	m_PtrToId.clear();
+	LOG_INFO_ENGINE("LayerStack::~LayerStack end");
 }
 
 void LayerStack::PushLayer(Scope<Layer> layer) {

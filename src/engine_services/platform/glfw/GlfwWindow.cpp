@@ -125,6 +125,7 @@ void GlfwWindow::Init(const WindowProps& props) {
 }
 
 void GlfwWindow::Shutdown() {
+    LOG_INFO_ENGINE("GlfwWindow::Shutdown begin");
     //TODO: m_Context.reset();
     if(m_Window) {
         glfwDestroyWindow(m_Window);
@@ -133,9 +134,12 @@ void GlfwWindow::Shutdown() {
     if(s_GLFWWindowCount > 0) {
         --s_GLFWWindowCount;
         if(s_GLFWWindowCount == 0) {
+            LOG_INFO_ENGINE("GlfwWindow::Shutdown calling glfwTerminate()");
             glfwTerminate();
+            LOG_INFO_ENGINE("GlfwWindow::Shutdown glfwTerminate returned");
         }
     }
+    LOG_INFO_ENGINE("GlfwWindow::Shutdown end");
 }
 
 void GlfwWindow::Update() {

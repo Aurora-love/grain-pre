@@ -43,7 +43,9 @@ set(PROJECT_SOURCES
     src/engine_services/core/Layer.cpp
     src/engine_services/core/LayerStack.cpp
     src/engine_services/platform/glfw/GlfwWindow.cpp
+    src/engine_services/platform/glfw/WindowsInput.cpp
     src/engine_services/platform/opengl/OpenGLContext.cpp
+    src/engine_services/platform/imgui/ImGuiLayer.cpp
 )
 
 # Create executable target

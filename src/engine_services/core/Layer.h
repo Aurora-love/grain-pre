@@ -1,5 +1,6 @@
 #pragma once
 #include "core/events/Event.h"
+#include "core/CoreTime.h"
 #include <string>
 namespace GE {
 
@@ -10,8 +11,9 @@ public:
 
     virtual void OnAttach() {}
     virtual void OnDetach() {}
-    virtual void OnUpdate() {}
+    virtual void OnUpdate(Timestep) {}
     virtual void OnEvent(Event&) {}
+    virtual void OnImGuiRender() {}
     
     inline const std::string& GetName() const { return m_DebugName; } 
 protected:
