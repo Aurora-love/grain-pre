@@ -8,6 +8,7 @@
 #include "core/Log.h"
 #include "engine_services/core/Application.h"
 #include <filesystem>
+#include <chrono>
 
 namespace GE {
 
@@ -38,7 +39,7 @@ void ImGuiLayer::OnAttach() {
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // 启用键盘控制 (Tab切换, 方向键等)
 	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // 启用手柄控制
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // 启用 Docking (停靠) 功能：允许将窗口停靠在主窗口或其他窗口中
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // 启用 Multi-Viewport (多视口) 功能：允许将窗口拖出主程序窗口，成为独立的浮动窗口
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // 启用 Multi-Viewport (多视口) 功能：允许将窗口拖出主程序窗口，成为独立的浮动窗口
 	
 	// io.ConfigViewportsNoAutoMerge = true;
 	// io.ConfigViewportsNoTaskBarIcon = true;
@@ -102,23 +103,27 @@ void ImGuiLayer::OnAttach() {
 // 当层被移除时调用，用于清理资源
 void ImGuiLayer::OnDetach() {
 	LOG_INFO_ENGINE("ImGuiLayer::OnDetach begin");
+
 	// 确保当前 OpenGL 上下文为创建 ImGui 时的主窗口上下文，避免在无效上下文上调用后端清理
 	if (m_Window) {
 		GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(m_Window);
 		glfwMakeContextCurrent(glfwWindow);
 	}
-	LOG_INFO_ENGINE("ImGuiLayer::OnDetach before ImGui_ImplOpenGL3_Shutdown");
+
 	ImGui_ImplOpenGL3_Shutdown();
+
 	LOG_INFO_ENGINE("ImGuiLayer::OnDetach after ImGui_ImplOpenGL3_Shutdown");
 
 	LOG_INFO_ENGINE("ImGuiLayer::OnDetach before ImGui_ImplGlfw_Shutdown");
-//BUG
+
 	ImGui_ImplGlfw_Shutdown();
 
 	LOG_INFO_ENGINE("ImGuiLayer::OnDetach after ImGui_ImplGlfw_Shutdown");
 
 	LOG_INFO_ENGINE("ImGuiLayer::OnDetach before ImGui::DestroyContext");
+
 	ImGui::DestroyContext();
+
 	LOG_INFO_ENGINE("ImGuiLayer::OnDetach after ImGui::DestroyContext");
 	LOG_INFO_ENGINE("ImGuiLayer::OnDetach end");
 }

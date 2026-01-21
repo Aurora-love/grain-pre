@@ -100,6 +100,10 @@ bool Application::OnWindowResize(WindowResizeEvent& e) {
 }
 
 void Application::Shutdown() {
-    m_Running = false;
+	LOG_INFO_ENGINE("Application::Shutdown begin");
+	m_Running = false;
+	// 先显式清理所有 Layer，确保 ImGui 等依赖的系统在窗口销毁前已被卸载
+	m_LayerStack.Clear();
+	LOG_INFO_ENGINE("Application::Shutdown end");
 }
 }

@@ -29,6 +29,8 @@ int main(int, char**)
     GE::Log::Init();
 
     GE::Ref<GE::Application> app = GE::CreateApplication();
-    app->Run();
 
+    app->Run();
+    
+    app->Shutdown();
 }

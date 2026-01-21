@@ -4,13 +4,16 @@ namespace GE {
 
 LayerStack::~LayerStack() {
 	LOG_INFO_ENGINE("LayerStack::~LayerStack begin (detach {} layers)", m_Layers.size());
-    for(const auto& layer : m_Layers) {
-        layer->OnDetach();
-    }
-	m_IdToPtr.clear();
-	m_PtrToId.clear();
+	if(m_Layers.size()) {
+    	for(const auto& layer : m_Layers) {
+        	layer->OnDetach();
+    	}
+		m_IdToPtr.clear();
+		m_PtrToId.clear();
+	}
 	LOG_INFO_ENGINE("LayerStack::~LayerStack end");
 }
+
 
 void LayerStack::PushLayer(Scope<Layer> layer) {
     Layer* rawLayer = layer.get();
@@ -115,5 +118,18 @@ void LayerStack::PopOverlayer(LayerID id) {
 	if (it == m_IdToPtr.end()) return;
 	Layer* ptr = it->second;
 	PopOverlayer(ptr);
+}
+
+void LayerStack::Clear() {
+	LOG_INFO_ENGINE("LayerStack::Clear begin (detach {} layers)", m_Layers.size());
+	for (const auto& layer : m_Layers) {
+		layer->OnDetach();
+	}
+	// 显式清理容器
+	m_Layers.clear();
+	m_LayerInsertIndex = 0;
+	m_IdToPtr.clear();
+	m_PtrToId.clear();
+	LOG_INFO_ENGINE("LayerStack::Clear end");
 }
 }

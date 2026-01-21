@@ -126,7 +126,7 @@ void GlfwWindow::Init(const WindowProps& props) {
 
 void GlfwWindow::Shutdown() {
     LOG_INFO_ENGINE("GlfwWindow::Shutdown begin");
-    //TODO: m_Context.reset();
+    //m_Context.reset();
     if(m_Window) {
         glfwDestroyWindow(m_Window);
         m_Window = nullptr;

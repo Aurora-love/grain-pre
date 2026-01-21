@@ -91,6 +91,8 @@ public:
  */
 	void PopOverlayer(Layer* overlayer);
 
+	void Clear();
+
 // 迭代器接口，允许遍历当前存储的 Layer（返回的元素为 Scope<Layer>）
 	std::vector<Scope<Layer>>::iterator begin() { return m_Layers.begin(); }
 	std::vector<Scope<Layer>>::iterator end() { return m_Layers.end(); }
