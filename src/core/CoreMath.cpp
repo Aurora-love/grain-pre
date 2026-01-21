@@ -73,7 +73,7 @@ Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up) { return glm::l
 Mat4 Perspective(float fov, float aspect, float zNear, float zFar) { return glm::perspective(fov, aspect, zNear, zFar); }
 Mat4 Perspective(float fov, float width, float height, float zNear, float zFar) { return glm::perspectiveFov(fov, width, height, zNear, zFar); }
 Mat4 Frustum(float left, float right, float bottom, float top, float zNear, float zFar) { return glm::frustum(left, right, bottom, top, zNear, zFar); }
-Quat QuaternionIdentity() { return Quat(1.0f, 0.0f, 0.0f, 0.0f); } // w, x, y, z
+Quat QuaternionIdentity() { return glm::quat_identity<float, glm::defaultp>(); }
 Quat QuaternionFromAxisAngle(const Vec3& axis, float angle) {
     float len = glm::length(axis);
     Vec3 n = len > 0.0f ? axis / len : Vec3(0.0f, 0.0f, 1.0f);

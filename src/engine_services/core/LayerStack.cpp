@@ -17,6 +17,10 @@ LayerStack::~LayerStack() {
 
 void LayerStack::PushLayer(Scope<Layer> layer) {
     Layer* rawLayer = layer.get();
+	if (!rawLayer) {
+        LOG_WARN_ENGINE("Attempted to push null layer");
+        return;
+    }
     m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, std::move(layer));
     m_LayerInsertIndex++;
 	// 注册 id 映射

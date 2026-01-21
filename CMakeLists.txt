@@ -39,13 +39,19 @@ set(PROJECT_SOURCES
     src/core/CoreTime.cpp
     src/core/CoreMath.cpp
     src/core/pch.cpp
+    src/core/FileSystem.cpp
     src/engine_services/core/Application.cpp
     src/engine_services/core/Layer.cpp
     src/engine_services/core/LayerStack.cpp
     src/engine_services/platform/glfw/GlfwWindow.cpp
     src/engine_services/platform/glfw/WindowsInput.cpp
-    src/engine_services/platform/opengl/OpenGLContext.cpp
     src/engine_services/platform/imgui/ImGuiLayer.cpp
+    src/engine_services/platform/opengl/OpenGLContext.cpp
+    src/engine_services/platform/opengl/OpenGLRendererAPI.cpp
+    src/engine_services/platform/opengl/OpenGLShader.cpp
+    src/engine_services/renderer/Renderer.cpp
+    src/engine_services/renderer/RendererAPI.cpp
+    src/engine_services/renderer/Shader.cpp
 )
 
 # Create executable target

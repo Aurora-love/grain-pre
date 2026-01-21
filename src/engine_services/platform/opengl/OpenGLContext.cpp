@@ -24,7 +24,7 @@ void OpenGLContext::InitContext() {
 	if (!status) {
 		LOG_ERROR_ENGINE("Failed to initialize Glad!");
 	}
-	ASSERT_ENGINE(status, "Failed to initialize Glad!");
+	//ASSERT_ENGINE(status, "Failed to initialize Glad!");
 
 	// 打印显卡和驱动信息
 	LOG_INFO_ENGINE("OpenGL Info:");
