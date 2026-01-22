@@ -7,7 +7,7 @@ namespace GE {
 	
 typedef unsigned int GLenum;
 
-class OpenGLShader : public IShader {
+class OpenGLShader : public Shader {
 public:
 	OpenGLShader(const std::string& filepath);
 	OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);

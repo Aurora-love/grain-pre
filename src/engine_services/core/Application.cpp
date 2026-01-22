@@ -2,8 +2,8 @@
 #include "core/CoreTime.h"
 #include "core/Core.h"
 #include "core/Log.h"
+#include "engine_services/renderer/Renderer.h"
 #include <glad/glad.h>
-
 
 namespace GE {
     
@@ -21,6 +21,7 @@ Application::Application() {
     m_Window = IWindow::Create();
 
     //TODO: Renderer,Physics2D,...
+    Renderer::Init();
 
     m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
@@ -45,13 +46,18 @@ void Application::Run() {
 	while (m_Running) {
 		Time::Update();
 		Timestep timestep = Time::GetDeltaTime();
-        //TEST
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 
         for(const auto& layer : m_LayerStack) {
             layer->OnUpdate(timestep);
         }
+
+        // 渲染更新
+        Renderer::BeginScene();
+        for(const auto& layer : m_LayerStack) {
+            layer->OnRender();
+        }
+        Renderer::EndScene();
+
         //TODO: Render thread, ImGuiRender
         m_ImGuiLayer->Begin();
         for(const auto& layer : m_LayerStack) {
@@ -95,7 +101,7 @@ bool Application::OnWindowResize(WindowResizeEvent& e) {
     if(e.GetWidth() == 0 || e.GetHeight() == 0) {
         return false;
     }
-    //Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+    Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
     return false;
 }
 

@@ -142,37 +142,13 @@ void ImGuiLayer::OnEvent(Event& e) {
 }
 
 void ImGuiLayer::OnImGuiRender() {
-	// 创建全局 DockSpace，使 ImGui 窗口可以停靠到主程序窗口中
-	ImGuiIO& io = ImGui::GetIO();
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->WorkPos);
-	ImGui::SetNextWindowSize(viewport->WorkSize);
-	ImGui::SetNextWindowViewport(viewport->ID);
-
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
-				 | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
-				 | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-	ImGuiStyle& style = ImGui::GetStyle();
-	float prev_rounding = style.WindowRounding;
-	ImVec2 prev_padding = style.WindowPadding;
-	style.WindowRounding = 0.0f;
-	style.WindowPadding = ImVec2(0.0f, 0.0f);
-
-	bool open = true;
-	ImGui::Begin("DockSpaceRoot", &open, window_flags);
-	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
-	ImGui::End();
-
-	style.WindowRounding = prev_rounding;
-	style.WindowPadding = prev_padding;
-
 	// 默认绘制 ImGui 的演示窗口，用于测试集成是否成功
 	// TODO: 调用自己的 UI 绘制代码，或者注释掉这行
 	static bool show = true;
 	ImGui::ShowDemoWindow(&show);
+	ImGui::Begin("My Window");
+    ImGui::Text("Hello, world!");
+    ImGui::End();
 }
 
 //每帧开始时调用

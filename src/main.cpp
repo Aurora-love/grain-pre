@@ -1,11 +1,15 @@
 #include "core/Log.h"
 #include "engine_services/core/Application.h"
 #include "engine_services/core/Layer.h"
+#include "engine_services/core/TriangleLayer.h"
+
+using namespace GE;
 
 class Sandbox : public GE::Application {
 public:
     Sandbox() {
         LOG_INFO("Sandbox App Initialized!");
+        PushLayer(GE::CreateScope<TriangleLayer>());
         //PushOverlayer(GE::CreateScope<GE::ImGuiLayer>());
     }
     ~Sandbox() {

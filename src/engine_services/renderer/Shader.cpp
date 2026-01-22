@@ -7,7 +7,7 @@
 
 namespace GE {
 
-Ref<IShader> IShader::Create(const std::string& filepath) {
+Ref<Shader> Shader::Create(const std::string& filepath) {
 	switch (Renderer::GetAPI()) {
 		case RendererAPI::API::None:    ASSERT_ENGINE(false, "RendererAPI::None is currently not supported!"); return nullptr;
 		case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(filepath);
@@ -16,9 +16,8 @@ Ref<IShader> IShader::Create(const std::string& filepath) {
 	return nullptr;
 }
 
-Ref<IShader> IShader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) {
-	switch (Renderer::GetAPI())
-	{
+Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) {
+	switch (Renderer::GetAPI()) {
 		case RendererAPI::API::None:    ASSERT_ENGINE(false, "RendererAPI::None is currently not supported!"); return nullptr;
 		case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 	}
@@ -26,34 +25,34 @@ Ref<IShader> IShader::Create(const std::string& name, const std::string& vertexS
 	return nullptr;
 }
 
-void IShaderLibrary::Add(const std::string& name, const Ref<IShader>& IShader) {
-	ASSERT_ENGINE(!IsExists(name), "IShader already exists!");
-	m_IShaders[name] = IShader;
+void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& Shader) {
+	ASSERT_ENGINE(!IsExists(name), "Shader already exists!");
+	m_Shaders[name] = Shader;
 }
 
-void IShaderLibrary::Add(const Ref<IShader>& IShader) {
-	auto& name = IShader->GetName();
-	Add(name, IShader);
+void ShaderLibrary::Add(const Ref<Shader>& Shader) {
+	auto& name = Shader->GetName();
+	Add(name, Shader);
 }
 
-Ref<IShader> IShaderLibrary::Load(const std::string& filepath) {
-	auto IShader = IShader::Create(filepath);
-	Add(IShader);
-	return IShader;
+Ref<Shader> ShaderLibrary::Load(const std::string& filepath) {
+	auto Shader = Shader::Create(filepath);
+	Add(Shader);
+	return Shader;
 }
 
-Ref<IShader> IShaderLibrary::Load(const std::string& name, const std::string& filepath) {
-	auto IShader = IShader::Create(filepath);
-	Add(name, IShader);
-	return IShader;
+Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath) {
+	auto Shader = Shader::Create(filepath);
+	Add(name, Shader);
+	return Shader;
 }
 
-Ref<IShader> IShaderLibrary::Get(const std::string& name) {
-	ASSERT_ENGINE(IsExists(name), "IShader not found!");
-	return m_IShaders[name];
+Ref<Shader> ShaderLibrary::Get(const std::string& name) {
+	ASSERT_ENGINE(IsExists(name), "Shader not found!");
+	return m_Shaders[name];
 }
 
-bool IShaderLibrary::IsExists(const std::string& name) const {
-	return m_IShaders.find(name) != m_IShaders.end();
+bool ShaderLibrary::IsExists(const std::string& name) const {
+	return m_Shaders.find(name) != m_Shaders.end();
 }
 }

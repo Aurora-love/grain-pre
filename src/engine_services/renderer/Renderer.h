@@ -13,9 +13,14 @@ namespace GE {
 class Renderer {
 public:
 	static void Init();
-	/**
-	 * @brief 获取当前使用的图形 API
-	 */
+	static void OnWindowResize(uint32_t width, uint32_t height);
+	static void BeginScene();
+	static void EndScene();
+	static void Submit(const Ref<Shader>& shader, 
+		                const Ref<VertexArray>& vertexArray, 
+		                const Mat4& transform = Mat4(1.0f));
+
+	// 获取当前使用的图形 API
 	inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 };
 }

@@ -43,15 +43,21 @@ set(PROJECT_SOURCES
     src/engine_services/core/Application.cpp
     src/engine_services/core/Layer.cpp
     src/engine_services/core/LayerStack.cpp
+    src/engine_services/core/TriangleLayer.cpp
     src/engine_services/platform/glfw/GlfwWindow.cpp
     src/engine_services/platform/glfw/WindowsInput.cpp
     src/engine_services/platform/imgui/ImGuiLayer.cpp
+    src/engine_services/platform/opengl/OpenGLBuffer.cpp
     src/engine_services/platform/opengl/OpenGLContext.cpp
     src/engine_services/platform/opengl/OpenGLRendererAPI.cpp
     src/engine_services/platform/opengl/OpenGLShader.cpp
+    src/engine_services/platform/opengl/OpenGLVertexArray.cpp
     src/engine_services/renderer/Renderer.cpp
     src/engine_services/renderer/RendererAPI.cpp
     src/engine_services/renderer/Shader.cpp
+    src/engine_services/renderer/RenderCommand.cpp
+    src/engine_services/renderer/Buffer.cpp
+    src/engine_services/renderer/VertexArray.cpp
 )
 
 # Create executable target
